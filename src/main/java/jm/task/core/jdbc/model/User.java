@@ -6,6 +6,14 @@ import javax.persistence.Table;
 
 @Table
 public class User {
+    @Override
+    public String toString() {
+        return String.format("""
+                        User = {id: %d | name: %s | lastName: %s | age: %d}
+                        """, getId(), getName(), getLastName(), getAge()
+        );
+    }
+
     @Id
     private Long id;
 
@@ -29,7 +37,7 @@ public class User {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -37,7 +45,7 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -45,7 +53,7 @@ public class User {
     }
 
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {
@@ -53,7 +61,7 @@ public class User {
     }
 
     public Byte getAge() {
-        return age;
+        return this.age;
     }
 
     public void setAge(Byte age) {
