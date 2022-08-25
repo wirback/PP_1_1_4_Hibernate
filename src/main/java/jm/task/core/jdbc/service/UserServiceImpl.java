@@ -1,34 +1,61 @@
 package jm.task.core.jdbc.service;
 
+import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    UserDaoJDBCImpl userDaoJDBC = new UserDaoJDBCImpl();
+    private final boolean runDaoHibernate = false;
+    private final UserDaoJDBCImpl userDaoJDBC = new UserDaoJDBCImpl();
+    private final UserDaoHibernateImpl userDaoHibernate = new UserDaoHibernateImpl();
 
     public void createUsersTable() {
-        userDaoJDBC.createUsersTable();
+        if (runDaoHibernate) {
+            userDaoHibernate.createUsersTable();
+        } else {
+            userDaoJDBC.createUsersTable();
+        }
     }
 
     public void dropUsersTable() {
-        userDaoJDBC.dropUsersTable();
+        if (runDaoHibernate) {
+            userDaoHibernate.dropUsersTable();
+        } else {
+            userDaoJDBC.dropUsersTable();
+        }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        userDaoJDBC.saveUser(name, lastName, age);
+        if (runDaoHibernate) {
+            userDaoHibernate.saveUser(name, lastName, age);
+        } else {
+            userDaoJDBC.saveUser(name, lastName, age);
+        }
     }
 
     public void removeUserById(long id) {
-        userDaoJDBC.removeUserById(id);
+        if (runDaoHibernate) {
+            userDaoHibernate.removeUserById(id);
+        } else {
+            userDaoJDBC.removeUserById(id);
+        }
     }
 
     public List<User> getAllUsers() {
-        return userDaoJDBC.getAllUsers();
+        if (runDaoHibernate) {
+            return userDaoHibernate.getAllUsers();
+        } else {
+            return userDaoJDBC.getAllUsers();
+        }
     }
 
     public void cleanUsersTable() {
-        userDaoJDBC.cleanUsersTable();
+        if (runDaoHibernate) {
+            userDaoHibernate.cleanUsersTable();
+        } else {
+            userDaoJDBC.cleanUsersTable();
+        }
     }
 }
