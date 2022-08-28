@@ -15,7 +15,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        try (Statement statement = connection.createStatement()){
+        /*try (Statement statement = connection.createStatement()){
             statement.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS usersTable
                     (id INT PRIMARY KEY AUTO_INCREMENT,
@@ -26,15 +26,33 @@ public class UserDaoJDBCImpl implements UserDao {
             );
         } catch (SQLException e) {
             e.printStackTrace();
+        }*/
+        try (PreparedStatement preparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS usersTable
+                (id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(50),
+                lastname VARCHAR(50),
+                age TINYINT
+                )""")) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public void dropUsersTable() {
-        try (Statement statement = connection.createStatement()){
+        /*try (Statement statement = connection.createStatement()){
             statement.executeUpdate("""
                     DROP TABLE IF EXISTS usersTable
                     """
             );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
+        try (PreparedStatement preparedStatement = connection.prepareStatement("""
+                DROP TABLE IF EXISTS usersTable
+                """)) {
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,10 +73,18 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try (Statement statement = connection.createStatement()){
+        /*try (Statement statement = connection.createStatement()){
             statement.executeUpdate(String.format("""
                     DELETE FROM usersTable WHERE %s
                     """, id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
+        try (PreparedStatement preparedStatement = connection.prepareStatement("""
+                DELETE FROM usersTable WHERE ?
+                """)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,7 +93,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
 
-        try (Statement statement = connection.createStatement()){
+        /*try (Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery("SELECT * FROM usersTable");
 
             while (resultSet.next()) {
@@ -80,13 +106,33 @@ public class UserDaoJDBCImpl implements UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }*/
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM usersTable")) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setLastName(resultSet.getString("lastname"));
+                user.setAge(resultSet.getByte("age"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return users;
     }
 
     public void cleanUsersTable() {
-        try (Statement statement = connection.createStatement()){
+        /*try (Statement statement = connection.createStatement()){
             statement.executeUpdate("DELETE FROM usersTable");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM usersTable")) {
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
