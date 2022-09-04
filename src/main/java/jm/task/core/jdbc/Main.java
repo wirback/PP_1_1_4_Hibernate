@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        //SessionFactory sessionFactory = Util.getConnectionHibernate();
         UserService userService = new UserServiceImpl();
 
         User user_1 = new User("Name_user_1", "LastName_user_1", (byte) 10);
